@@ -69,6 +69,10 @@ func swiftArray(p *parser.Parser, def *parser.Type, depth int) string {
 	t := def.Fields[0].Type
 	bt := strings.TrimSpace(swiftElement(p, t, depth))
 
+	if depth == 1 {
+		return "var jsonData: [" + bt + "]()"
+	}
+
 	return indent("["+bt+"]()", depth-1)
 }
 
