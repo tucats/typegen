@@ -52,7 +52,7 @@ func swiftElement(p *parser.Parser, def *parser.Type, depth int) string {
 		return indent("Double", depth-1)
 
 	case parser.TypeType:
-		return indent(def.Name, depth-1)
+		return indent(setCase(def.Name, p.Camel), depth-1)
 
 	case parser.ArrayType:
 		return swiftArray(p, def, depth)
@@ -69,7 +69,7 @@ func swiftArray(p *parser.Parser, def *parser.Type, depth int) string {
 	t := def.Fields[0].Type
 	bt := strings.TrimSpace(swiftElement(p, t, depth))
 
-	return indent("[]"+bt, depth-1)
+	return indent("["+bt+"]()", depth-1)
 }
 
 func swiftStruct(p *parser.Parser, def *parser.Type, depth int) string {
@@ -97,12 +97,12 @@ func swiftStruct(p *parser.Parser, def *parser.Type, depth int) string {
 		}
 	}
 
-	result.WriteString(fmt.Sprintf("struct %s: Codable {\n", def.Name))
+	result.WriteString(fmt.Sprintf("class %s: Codable {\n", setCase(def.Name, p.Camel)))
 
 	for _, field := range def.Fields {
 		result.WriteString(pad("", depth*2))
 		result.WriteString("var ")
-		result.WriteString(pad(setCase(field.Name, p.Camel)+":", nameWidth+1))
+		result.WriteString(pad(field.Name+":", nameWidth+1))
 		result.WriteString(" ")
 
 		t := swiftElement(p, field.Type, depth+1)
