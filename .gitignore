@@ -1,0 +1,4 @@
+typegen
+*.exe
+_debug_bin_
+
