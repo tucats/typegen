@@ -1,4 +1,4 @@
-# json-go
+# typegen
 
 Generate Go or Swift type definitions based on sample JSON data
 
