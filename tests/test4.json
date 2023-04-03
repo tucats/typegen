@@ -1,0 +1,14 @@
+{
+    "team": {
+        "name": "All Stars",
+        "members": [{
+            "name": "Dick",
+            "age": 55,
+            "gender": "m"
+        }, {
+            "name": "Jane",
+            "age": 52,
+            "gender": "f"
+        }]
+    }
+}
