@@ -8,15 +8,14 @@ import (
 	"strings"
 )
 
+// Parse a single element from the JSON, and generate a type definition for
+// that item. Recursively processes JSON array and compound objects. The depth
+// is used to track recursion.
 func (p *Parser) element(item interface{}, depth int) (*Type, error) {
 	var err error
 
 	if p.Debug {
 		fmt.Printf("[%2d] %sparsing %v\n", depth, strings.Repeat("| ", depth), desc(item))
-
-		if desc(item) == "map[GlossDiv, title]" {
-			fmt.Println("DEBUG")
-		}
 	}
 
 	switch actual := item.(type) {
@@ -49,6 +48,7 @@ func (p *Parser) element(item interface{}, depth int) (*Type, error) {
 	return nil, err
 }
 
+// Debugging function that prints a human-readable summary of an interface object.
 func desc(item interface{}) string {
 	switch actual := item.(type) {
 	case bool:

@@ -50,6 +50,9 @@ func (t *Type) Field(name string, field *Type) *Type {
 	return t
 }
 
+// String generates a human-readable form of the Type object. This is used
+// for debugging purposes only; the output is not generated as any given
+// language representation.
 func (t *Type) String() string {
 	if t == nil {
 		return "nil"
@@ -100,6 +103,9 @@ func (t *Type) String() string {
 	}
 }
 
+// Matches determines if the current type and the test type match exactly. This is
+// used to determine if the item is a type we have seen before or not. This will
+// recursively process compound structure types.
 func (t *Type) Matches(test *Type) bool {
 	if test == nil {
 		return false

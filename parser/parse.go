@@ -2,6 +2,9 @@ package parser
 
 import "encoding/json"
 
+// Parse parses a JSON data element, and stores the definition in the current
+// parser as the Type element. If the JSON is not valid, that is returned as
+// an error condition.
 func (p *Parser) Parse(data []byte) error {
 	var (
 		err     error

@@ -1,5 +1,7 @@
 package parser
 
+// Process an array. If all the types of the items in the array match, that becomes
+// the type of the array.  Otherwise, the type is specified as interface{}.
 func (p *Parser) array(data []interface{}, depth int) (*Type, error) {
 	var (
 		err error

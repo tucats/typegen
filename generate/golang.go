@@ -8,6 +8,8 @@ import (
 	"github.com/tucats/typegen/parser"
 )
 
+// Given a parser, generate the Go version of the definition tree. This
+// generates the type elements, and then the root type value.
 func generateGo(p *parser.Parser) string {
 	result := strings.Builder{}
 
@@ -37,6 +39,9 @@ func generateGo(p *parser.Parser) string {
 	return result.String()
 }
 
+// Generate the output for a single element. This will generate defintiions for
+// scalar types and recursively generate references to structure fields and array
+// types.
 func goElement(p *parser.Parser, def *parser.Type, depth int) string {
 	switch def.Kind {
 	case parser.InterfaceType:
@@ -68,6 +73,7 @@ func goElement(p *parser.Parser, def *parser.Type, depth int) string {
 	}
 }
 
+// Generate an array declaration in Go syntax.
 func goArray(p *parser.Parser, def *parser.Type, depth int) string {
 	t := def.Fields[0].Type
 	bt := strings.TrimSpace(goElement(p, t, depth))
@@ -75,6 +81,7 @@ func goArray(p *parser.Parser, def *parser.Type, depth int) string {
 	return indent("[]"+bt, depth-1)
 }
 
+// Generate a structure declaration in Go syntax.
 func goStruct(p *parser.Parser, def *parser.Type, depth int) string {
 	result := strings.Builder{}
 
@@ -119,6 +126,7 @@ func goStruct(p *parser.Parser, def *parser.Type, depth int) string {
 	return result.String()
 }
 
+// Generate a JSON tag in Go syntax.
 func tag(p *parser.Parser, name string) string {
 	omitempty := ""
 	if p.Omit {

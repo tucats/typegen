@@ -7,6 +7,7 @@ import (
 
 var sequenceNumber int32
 
+// Generate a sequence number that is guaranteed to be unique and thread-safe.
 func (p *Parser) generateTypeName() string {
 	name := p.Name
 	if name == "" {

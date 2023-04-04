@@ -6,6 +6,10 @@ import (
 	"strings"
 )
 
+// Process a JSON object as a structure type (a compound object with named fields).
+// The members of the structure are processed recursively and their types are added
+// to this structure definition. If the field references another structure, the
+// field points to the type definition previously parsed.
 func (p *Parser) structure(data map[string]interface{}, depth int) (*Type, error) {
 	var (
 		err error

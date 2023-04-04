@@ -7,6 +7,8 @@ import (
 	"github.com/tucats/typegen/parser"
 )
 
+// Generate produces a text representation of the declaration, given
+// a target language such as language.GoLang or language.Swift.
 func Generate(p *parser.Parser, target language.Language) string {
 	switch target {
 	case language.GoLang:

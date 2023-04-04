@@ -8,6 +8,14 @@ import (
 	"github.com/tucats/typegen/parser"
 )
 
+// Handle name modifications appropriate to the target language and
+// settings. This includes setting camel-case if requested for Go code,
+// and also handling invalid names in the various languages, which are
+// converted to valid name syntax.
+//
+// For Go, invalid characters are removed and the name is camel-cased
+// at each term in the name. For Swift, if the name contains invalid
+// characters, it is escaped using the back-tick character.
 func setCase(p *parser.Parser, name string) string {
 	result := strings.Builder{}
 	camelNext := false

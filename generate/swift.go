@@ -8,6 +8,8 @@ import (
 	"github.com/tucats/typegen/parser"
 )
 
+// Given a parser, generate the Swift version of the definition tree. This
+// generates the type elements, and then the root type value.
 func generateSwift(p *parser.Parser) string {
 	result := strings.Builder{}
 
@@ -37,6 +39,9 @@ func generateSwift(p *parser.Parser) string {
 	return result.String()
 }
 
+// Generate the output for a single element. This will generate defintiions for
+// scalar types and recursively generate references to structure fields and array
+// types.
 func swiftElement(p *parser.Parser, def *parser.Type, depth int) string {
 	switch def.Kind {
 	case parser.BoolType:
@@ -65,6 +70,7 @@ func swiftElement(p *parser.Parser, def *parser.Type, depth int) string {
 	}
 }
 
+// Show an array definition.
 func swiftArray(p *parser.Parser, def *parser.Type, depth int) string {
 	t := def.Fields[0].Type
 	bt := strings.TrimSpace(swiftElement(p, t, depth))
@@ -76,6 +82,7 @@ func swiftArray(p *parser.Parser, def *parser.Type, depth int) string {
 	return indent("["+bt+"]()", depth-1)
 }
 
+// Show a structure definition.
 func swiftStruct(p *parser.Parser, def *parser.Type, depth int) string {
 	result := strings.Builder{}
 
