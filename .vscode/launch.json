@@ -10,7 +10,7 @@
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceFolder}",
-            "args":["-f", "/Users/tom/.ego/ego.json", "-l", "swift"]
+            "args":["-f", "tests/test3.json", "-d"]
         }
     ]
 }

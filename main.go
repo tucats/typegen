@@ -21,6 +21,7 @@ func main() {
 		typeName string
 		camel    bool
 		omit     bool
+		debug    bool
 	)
 
 	input := os.Stdin
@@ -31,6 +32,9 @@ func main() {
 		switch arg {
 		case "-h", "--help":
 			help()
+
+		case "-d", "--debug":
+			debug = true
 
 		case "--language", "-l":
 			i++
@@ -101,6 +105,8 @@ func main() {
 			CamelCase(camel).
 			OmitEmpty(omit).
 			Language(target)
+
+		p.Debug = debug
 
 		err = p.Parse(b)
 	}

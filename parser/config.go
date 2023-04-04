@@ -6,6 +6,7 @@ type Parser struct {
 	Types  map[string]*Type
 	Camel  bool
 	Omit   bool
+	Debug  bool
 	Name   string
 	Type   *Type
 	Target language.Language

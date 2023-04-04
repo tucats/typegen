@@ -1,5 +1,10 @@
 package parser
 
+import (
+	"fmt"
+	"strings"
+)
+
 type BaseType int
 
 const (
@@ -45,6 +50,56 @@ func (t *Type) Field(name string, field *Type) *Type {
 	return t
 }
 
+func (t *Type) String() string {
+	if t == nil {
+		return "nil"
+	}
+
+	switch t.Kind {
+	case BoolType:
+		return "bool"
+
+	case IntType:
+		return "int"
+
+	case InterfaceType:
+		return "interface{}"
+
+	case FloatType:
+		return "float64"
+
+	case StringType:
+		return "string"
+
+	case ArrayType:
+		bt := t.Fields[0].Type
+
+		return "[]" + bt.String()
+
+	case StructType:
+		text := strings.Builder{}
+		text.WriteString("struct {")
+
+		for index, field := range t.Fields {
+			if index > 0 {
+				text.WriteString(", ")
+			}
+
+			text.WriteString(field.Name)
+		}
+
+		text.WriteString("}")
+
+		return text.String()
+
+	case TypeType:
+		return fmt.Sprintf("type %s [%s]", t.Name, t.Fields[0].Type)
+
+	default:
+		return "unknown type"
+	}
+}
+
 func (t *Type) Matches(test *Type) bool {
 	if test == nil {
 		return false
@@ -80,6 +135,12 @@ func (t *Type) Matches(test *Type) bool {
 			if !t1.Type.Matches(t2.Type) {
 				return false
 			}
+		}
+	}
+
+	if t.Kind == TypeType {
+		if !t.Fields[0].Type.Matches(test.Fields[0].Type) {
+			return false
 		}
 	}
 
