@@ -11,7 +11,7 @@ the types are marshalled or unmarshalled.
 
 The tool will attempt to generate specific type definitions where possible. If
 an array is not heterogeneous, for example, it will be defined as []interface{}
-when the language specified is `go`, but if all the elements of the array are 
+when the language specified is `go`, but if all the elements of the array are
 the same, then it is an array of the given type.
 
 Nesting is detected, such that the generated type may reference additional
