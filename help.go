@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-const helpText = `json-go: Generate Go data definitions from sample json
+const helpText = `typegen: Generate language-specific data definitions from sample json
 
 Usage: 
     json-go [options]
