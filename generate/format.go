@@ -8,6 +8,21 @@ import (
 	"github.com/tucats/typegen/parser"
 )
 
+// Return the string with the first character uppercased.
+func upcase(s string) string {
+	r := strings.Builder{}
+
+	for index, ch := range s {
+		if index == 0 {
+			ch = unicode.ToUpper(ch)
+		}
+
+		r.WriteRune(ch)
+	}
+
+	return r.String()
+}
+
 // Handle name modifications appropriate to the target language and
 // settings. This includes setting camel-case if requested for Go code,
 // and also handling invalid names in the various languages, which are

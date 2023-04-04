@@ -24,9 +24,10 @@ type Field struct {
 }
 
 type Type struct {
-	Kind   BaseType
-	Name   string
-	Fields []*Field
+	Kind    BaseType
+	Name    string
+	AltName string
+	Fields  []*Field
 }
 
 func newType(kind BaseType) *Type {
@@ -46,6 +47,27 @@ func (t *Type) Field(name string, field *Type) *Type {
 		Name: name,
 		Type: field,
 	})
+
+	return t
+}
+
+func (t *Type) Alias(name string, depth int, debug bool) *Type {
+	oldName := t.Name
+	if oldName == "" && t.Kind == ArrayType {
+		oldName = t.Fields[0].Type.Name
+	}
+
+	if oldName == "" {
+		fmt.Printf("Couldnt find name of type %s\n", t)
+	}
+
+	if debug {
+		fmt.Printf("[%2d] %s-> using alias %s for %s\n", depth, strings.Repeat("| ", depth*2), name, oldName)
+	}
+
+	if t.AltName == "" {
+		t.AltName = name + "Type"
+	}
 
 	return t
 }

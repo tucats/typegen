@@ -5,12 +5,15 @@ import (
 	"io"
 	"io/fs"
 	"os"
+	"runtime"
 	"strings"
 
 	"github.com/tucats/typegen/generate"
 	"github.com/tucats/typegen/language"
 	"github.com/tucats/typegen/parser"
 )
+
+var Version string = "0.1.1"
 
 func main() {
 	var (
@@ -22,6 +25,7 @@ func main() {
 		camel    bool
 		omit     bool
 		debug    bool
+		aliases  bool
 	)
 
 	input := os.Stdin
@@ -33,8 +37,15 @@ func main() {
 		case "-h", "--help":
 			help()
 
+		case "--version", "-v":
+			fmt.Printf("typegen %s (%s)\n", Version, runtime.Version())
+			os.Exit(0)
+
 		case "-d", "--debug":
 			debug = true
+
+		case "-a", "--alias", "--aliases":
+			aliases = true
 
 		case "--language", "-l":
 			i++
@@ -107,6 +118,7 @@ func main() {
 			Language(target)
 
 		p.Debug = debug
+		p.UseAliases = aliases
 
 		err = p.Parse(b)
 	}

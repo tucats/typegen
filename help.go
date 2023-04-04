@@ -11,12 +11,13 @@ Usage:
     json-go [options]
 
 Options:
-  --camel,  -c                   Use camel-case for struct member names
+  --aliases, -a                  Attempt to generate type names based on object keys
   --file,   -f    <filename>     Read sample json from named file instead of stdin
   --language, -l  <language>     "go" or "swift", default is "go"
   --omit-empty                   Add omitempty to json tags in Go structures
   --output, -o    <filename>     Write generated text to named file instead of stdout
-  --type,   -t    <typename>     Specify base type name in generated text`
+  --type,   -t    <typename>     Specify base type name in generated text
+  --version, -v                  Display version number of command line tool`
 
 func help() {
 	fmt.Println(helpText)

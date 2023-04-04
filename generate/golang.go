@@ -23,6 +23,18 @@ func generateGo(p *parser.Parser) string {
 
 	for _, name := range keys {
 		definition := p.Types[name]
+
+		if p.UseAliases {
+			if alias, found := p.Aliases[name]; found {
+				oldName := name
+				name = setCase(p, alias) + "Type"
+
+				if p.Debug {
+					name = name + " /* " + oldName + " */"
+				}
+			}
+		}
+
 		result.WriteString(fmt.Sprintf("type %s ", name))
 		result.WriteString(goElement(p, definition, 1))
 		result.WriteRune('\n')
@@ -60,7 +72,12 @@ func goElement(p *parser.Parser, def *parser.Type, depth int) string {
 		return indent("float64", depth-1)
 
 	case parser.TypeType:
-		return indent(def.Name, depth-1)
+		name := def.Name
+		if def.AltName != "" {
+			name = def.AltName
+		}
+
+		return indent(setCase(p, name), depth-1)
 
 	case parser.ArrayType:
 		return goArray(p, def, depth)
@@ -111,6 +128,7 @@ func goStruct(p *parser.Parser, def *parser.Type, depth int) string {
 
 	for _, field := range def.Fields {
 		result.WriteString(pad("", depth*2))
+
 		result.WriteString(pad(setCase(p, field.Name), nameWidth))
 		result.WriteString(" ")
 

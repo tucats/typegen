@@ -27,6 +27,17 @@ func (p *Parser) structure(data map[string]interface{}, depth int) (*Type, error
 	for _, key := range keys {
 		ft, _ := p.element(data[key], depth+1)
 
+		if p.UseAliases {
+			if ft.Kind == TypeType {
+				ft.Alias(key, depth, p.Debug)
+				p.Alias(ft, key, depth+1)
+			} else if ft.Kind == ArrayType {
+				ft.Alias(key, depth+1, p.Debug)
+				p.Alias(ft, key, depth+1)
+				ft.Fields[0].Type.Alias(key, depth, p.Debug)
+			}
+		}
+
 		t.Field(key, ft)
 	}
 
@@ -56,7 +67,7 @@ func (p *Parser) structure(data map[string]interface{}, depth int) (*Type, error
 	t = newType(TypeType).Named(name).Field("typed field", t)
 
 	if p.Debug {
-		fmt.Printf("[%2d] %s-> created type %s\n", depth, strings.Repeat("| ", depth*2), t)
+		fmt.Printf("[%2d] %s-> created %s\n", depth, strings.Repeat("| ", depth*2), t)
 	}
 
 	return t, err
