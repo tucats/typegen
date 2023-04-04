@@ -16,5 +16,5 @@ func (p *Parser) generateTypeName() string {
 
 	n := atomic.AddInt32(&sequenceNumber, 1)
 
-	return name + "Type" + strconv.Itoa(int(n))
+	return name + AliasTypeSuffix + strconv.Itoa(int(n))
 }

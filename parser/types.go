@@ -30,6 +30,8 @@ type Type struct {
 	Fields  []*Field
 }
 
+var AliasTypeSuffix = "Type"
+
 func newType(kind BaseType) *Type {
 	return &Type{
 		Kind: kind,
@@ -57,16 +59,12 @@ func (t *Type) Alias(name string, depth int, debug bool) *Type {
 		oldName = t.Fields[0].Type.Name
 	}
 
-	if oldName == "" {
-		fmt.Printf("Couldnt find name of type %s\n", t)
-	}
-
 	if debug {
 		fmt.Printf("[%2d] %s-> using alias %s for %s\n", depth, strings.Repeat("| ", depth*2), name, oldName)
 	}
 
 	if t.AltName == "" {
-		t.AltName = name + "Type"
+		t.AltName = name + AliasTypeSuffix
 	}
 
 	return t

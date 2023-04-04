@@ -27,7 +27,7 @@ func generateGo(p *parser.Parser) string {
 		if p.UseAliases {
 			if alias, found := p.Aliases[name]; found {
 				oldName := name
-				name = setCase(p, alias) + "Type"
+				name = setCase(p, alias) + parser.AliasTypeSuffix
 
 				if p.Debug {
 					name = name + " /* " + oldName + " */"

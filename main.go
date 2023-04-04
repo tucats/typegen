@@ -47,6 +47,10 @@ func main() {
 		case "-a", "--alias", "--aliases":
 			aliases = true
 
+		case "-s", "--suffix":
+			i++
+			parser.AliasTypeSuffix = os.Args[i]
+
 		case "--language", "-l":
 			i++
 			name := strings.ToLower(os.Args[i])
