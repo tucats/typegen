@@ -52,7 +52,7 @@ func swiftElement(p *parser.Parser, def *parser.Type, depth int) string {
 		return indent("Double", depth-1)
 
 	case parser.TypeType:
-		return indent(setCase(def.Name, p.Camel), depth-1)
+		return indent(setCase(p, def.Name), depth-1)
 
 	case parser.ArrayType:
 		return swiftArray(p, def, depth)
@@ -101,12 +101,12 @@ func swiftStruct(p *parser.Parser, def *parser.Type, depth int) string {
 		}
 	}
 
-	result.WriteString(fmt.Sprintf("class %s: Codable {\n", setCase(def.Name, p.Camel)))
+	result.WriteString(fmt.Sprintf("class %s: Codable {\n", setCase(p, def.Name)))
 
 	for _, field := range def.Fields {
 		result.WriteString(pad("", depth*2))
 		result.WriteString("var ")
-		result.WriteString(pad(field.Name+":", nameWidth+1))
+		result.WriteString(pad(setCase(p, field.Name)+":", nameWidth+3))
 		result.WriteString(" ")
 
 		t := swiftElement(p, field.Type, depth+1)

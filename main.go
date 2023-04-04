@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/tucats/typegen/generate"
+	"github.com/tucats/typegen/language"
 	"github.com/tucats/typegen/parser"
 )
 
@@ -23,7 +24,7 @@ func main() {
 	)
 
 	input := os.Stdin
-	language := generate.GoLang
+	target := language.GoLang
 
 	for i := 1; i < len(os.Args); i++ {
 		arg := os.Args[i]
@@ -37,10 +38,10 @@ func main() {
 
 			switch name {
 			case "go", "golang":
-				language = generate.GoLang
+				target = language.GoLang
 
 			case "swift":
-				language = generate.Swift
+				target = language.Swift
 
 			default:
 				err = fmt.Errorf("unrecognized or unsupported language: %s", name)
@@ -95,13 +96,17 @@ func main() {
 	}
 
 	if err == nil {
-		p = parser.New().Named(typeName).CamelCase(camel).OmitEmpty(omit)
+		p = parser.New().
+			Named(typeName).
+			CamelCase(camel).
+			OmitEmpty(omit).
+			Language(target)
 
 		err = p.Parse(b)
 	}
 
 	if err == nil {
-		text = generate.Generate(p, language)
+		text = generate.Generate(p, target)
 	}
 
 	if err == nil {

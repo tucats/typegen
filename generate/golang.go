@@ -104,7 +104,7 @@ func goStruct(p *parser.Parser, def *parser.Type, depth int) string {
 
 	for _, field := range def.Fields {
 		result.WriteString(pad("", depth*2))
-		result.WriteString(pad(setCase(field.Name, p.Camel), nameWidth))
+		result.WriteString(pad(setCase(p, field.Name), nameWidth))
 		result.WriteString(" ")
 
 		t := goElement(p, field.Type, depth+1)

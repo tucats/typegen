@@ -1,11 +1,14 @@
 package parser
 
+import "github.com/tucats/typegen/language"
+
 type Parser struct {
-	Types map[string]*Type
-	Camel bool
-	Omit  bool
-	Name  string
-	Type  *Type
+	Types  map[string]*Type
+	Camel  bool
+	Omit   bool
+	Name   string
+	Type   *Type
+	Target language.Language
 }
 
 func New() *Parser {
@@ -14,6 +17,11 @@ func New() *Parser {
 	}
 }
 
+func (p *Parser) Language(target language.Language) *Parser {
+	p.Target = target
+
+	return p
+}
 func (p *Parser) OmitEmpty(flag bool) *Parser {
 	p.Omit = flag
 
