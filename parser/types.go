@@ -3,6 +3,8 @@ package parser
 import (
 	"fmt"
 	"strings"
+
+	"github.com/tucats/typegen/language"
 )
 
 type BaseType int
@@ -28,6 +30,8 @@ type Type struct {
 	Name    string
 	AltName string
 	Fields  []*Field
+	Array   *Type
+	Omit    bool
 }
 
 var AliasTypeSuffix = "Type"
@@ -126,7 +130,7 @@ func (t *Type) String() string {
 // Matches determines if the current type and the test type match exactly. This is
 // used to determine if the item is a type we have seen before or not. This will
 // recursively process compound structure types.
-func (t *Type) Matches(test *Type) bool {
+func (t *Type) Matches(test *Type, target language.Language) bool {
 	if test == nil {
 		return false
 	}
@@ -147,25 +151,63 @@ func (t *Type) Matches(test *Type) bool {
 			return false
 		}
 
-		return t1.Type.Matches(t2.Type)
+		return t1.Type.Matches(t2.Type, target)
 	}
 
-	// @tomcole later, make this allow partial matches
 	if t.Kind == StructType {
-		if len(t.Fields) != len(test.Fields) {
+		if len(t.Fields) < len(test.Fields) {
 			return false
 		}
 
-		for index, t1 := range t.Fields {
-			t2 := test.Fields[index]
-			if !t1.Type.Matches(t2.Type) {
+		switch target {
+		case language.GoLang, language.Swift:
+			// Make a list of fields in the primary structure with their types.
+			fields := map[string]*Type{}
+
+			for _, field := range t.Fields {
+				fields[field.Name] = field.Type
+			}
+
+			// For every field in the test type, it must exist in the current
+			// primary type, and have a matching type. If the field in the test
+			// does not exist in the primary then it does not match.
+			for _, field := range test.Fields {
+				if t2, found := fields[field.Name]; found {
+					if !t2.Matches(field.Type, target) {
+						return false
+					} else {
+						// Found successfully, remove from field list.
+						delete(fields, field.Name)
+					}
+				} else {
+					return false
+				}
+			}
+
+			// Now, go over the fields that are left (that is, fields that are
+			// in the primary but not in the test) and mark them as being able
+			// to be omitted.
+			for _, fieldType := range fields {
+				fieldType.Omit = true
+			}
+
+		// By default, to match the fields must be identical in other languages.
+		default:
+			if len(t.Fields) != len(test.Fields) {
 				return false
+			}
+
+			for index, t1 := range t.Fields {
+				t2 := test.Fields[index]
+				if !t1.Type.Matches(t2.Type, target) {
+					return false
+				}
 			}
 		}
 	}
 
 	if t.Kind == TypeType {
-		if !t.Fields[0].Type.Matches(test.Fields[0].Type) {
+		if !t.Fields[0].Type.Matches(test.Fields[0].Type, target) {
 			return false
 		}
 	}

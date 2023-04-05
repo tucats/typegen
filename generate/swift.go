@@ -32,6 +32,8 @@ func generateSwift(p *parser.Parser) string {
 				if p.Debug {
 					name = name + " /* " + oldName + " */"
 				}
+			} else {
+				continue
 			}
 		}
 
@@ -58,7 +60,7 @@ func generateSwift(p *parser.Parser) string {
 func swiftElement(p *parser.Parser, def *parser.Type, depth int) string {
 	switch def.Kind {
 	case parser.BoolType:
-		return indent("Boolean", depth-1)
+		return indent("Bool", depth-1)
 
 	case parser.StringType:
 		return indent("String", depth-1)
@@ -68,6 +70,9 @@ func swiftElement(p *parser.Parser, def *parser.Type, depth int) string {
 
 	case parser.FloatType:
 		return indent("Double", depth-1)
+
+	case parser.InterfaceType:
+		return "### NON-HOMOGENEOUS ARRAY MEMBERS ###"
 
 	case parser.TypeType:
 		name := def.Name
@@ -91,6 +96,11 @@ func swiftElement(p *parser.Parser, def *parser.Type, depth int) string {
 // Show an array definition.
 func swiftArray(p *parser.Parser, def *parser.Type, depth int) string {
 	t := def.Fields[0].Type
+
+	if t.Kind == parser.InterfaceType {
+		return "  Bool? /* Invalid heterogeneous array in input data */"
+	}
+
 	bt := strings.TrimSpace(swiftElement(p, t, depth))
 
 	if depth == 1 {
@@ -131,10 +141,22 @@ func swiftStruct(p *parser.Parser, def *parser.Type, depth int) string {
 	for _, field := range def.Fields {
 		result.WriteString(pad("", depth*2))
 		result.WriteString("var ")
-		result.WriteString(pad(setCase(p, field.Name)+":", nameWidth+3))
-		result.WriteString(" ")
+
+		if p.Pretty {
+			result.WriteString(pad(setCase(p, field.Name)+":", nameWidth+3))
+		} else {
+			result.WriteString(setCase(p, field.Name) + ": ")
+		}
 
 		t := swiftElement(p, field.Type, depth+1)
+
+		if field.Type.Omit {
+			t = t + "?" // Mark as optional
+		}
+
+		if !p.Pretty {
+			t = strings.TrimSpace(t)
+		}
 
 		result.WriteString(pad(t, typeWidth))
 		result.WriteRune('\n')

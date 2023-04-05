@@ -8,12 +8,14 @@ func (p *Parser) array(data []interface{}, depth int) (*Type, error) {
 		t   *Type
 	)
 
+	array := newType(ArrayType)
+
 	for _, value := range data {
 		if t == nil {
 			t, err = p.element(value, depth+1)
 		} else {
 			t2, _ := p.element(value, depth+1)
-			if !t.Matches(t2) {
+			if !t.Matches(t2, p.Target) {
 				t = newType(InterfaceType)
 
 				break
@@ -25,5 +27,7 @@ func (p *Parser) array(data []interface{}, depth int) (*Type, error) {
 		t = newType(InterfaceType)
 	}
 
-	return newType(ArrayType).Field("arrayType", t), err
+	t.Array = array
+
+	return array.Field("arrayType", t), err
 }

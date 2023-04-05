@@ -52,7 +52,7 @@ func (p *Parser) structure(data map[string]interface{}, depth int) (*Type, error
 
 	// Is this a type we already know about? If so, use that.
 	for name, definition := range p.Types {
-		if t.Matches(definition) {
+		if t.Matches(definition, p.Target) {
 			if p.Debug {
 				fmt.Printf("[%2d] %s-> apply type %s\n", depth, strings.Repeat("| ", depth*2), name)
 			}

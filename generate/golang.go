@@ -32,10 +32,17 @@ func generateGo(p *parser.Parser) string {
 				if p.Debug {
 					name = name + " /* " + oldName + " */"
 				}
+			} else {
+				continue
 			}
 		}
 
 		result.WriteString(fmt.Sprintf("type %s ", name))
+
+		if definition.Fields[0].Type.Array != nil {
+			result.WriteString("/* array member */ ")
+		}
+
 		result.WriteString(goElement(p, definition, 1))
 		result.WriteRune('\n')
 	}
@@ -55,21 +62,23 @@ func generateGo(p *parser.Parser) string {
 // scalar types and recursively generate references to structure fields and array
 // types.
 func goElement(p *parser.Parser, def *parser.Type, depth int) string {
+	comment := ""
+
 	switch def.Kind {
 	case parser.InterfaceType:
-		return indent("interface{}", depth-1)
+		return comment + indent("interface{}", depth-1)
 
 	case parser.BoolType:
-		return indent("bool", depth-1)
+		return comment + indent("bool", depth-1)
 
 	case parser.StringType:
-		return indent("string", depth-1)
+		return comment + indent("string", depth-1)
 
 	case parser.IntType:
-		return indent("int", depth-1)
+		return comment + indent("int", depth-1)
 
 	case parser.FloatType:
-		return indent("float64", depth-1)
+		return comment + indent("float64", depth-1)
 
 	case parser.TypeType:
 		name := def.Name
@@ -77,16 +86,16 @@ func goElement(p *parser.Parser, def *parser.Type, depth int) string {
 			name = def.AltName
 		}
 
-		return indent(setCase(p, name), depth-1)
+		return comment + indent(setCase(p, name), depth-1)
 
 	case parser.ArrayType:
-		return goArray(p, def, depth)
+		return comment + goArray(p, def, depth)
 
 	case parser.StructType:
-		return goStruct(p, def, depth)
+		return comment + goStruct(p, def, depth)
 
 	default:
-		return fmt.Sprintf("###Unsupported type: %v", def.Kind)
+		return comment + fmt.Sprintf("###Unsupported type: %v", def.Kind)
 	}
 }
 
@@ -135,7 +144,7 @@ func goStruct(p *parser.Parser, def *parser.Type, depth int) string {
 		t := goElement(p, field.Type, depth+1)
 
 		result.WriteString(pad(t, typeWidth))
-		result.WriteString(tag(p, field.Name))
+		result.WriteString(tag(p, field))
 		result.WriteRune('\n')
 	}
 
@@ -145,9 +154,12 @@ func goStruct(p *parser.Parser, def *parser.Type, depth int) string {
 }
 
 // Generate a JSON tag in Go syntax.
-func tag(p *parser.Parser, name string) string {
+func tag(p *parser.Parser, field *parser.Field) string {
+	name := field.Name
+	omit := field.Type.Omit
+
 	omitempty := ""
-	if p.Omit {
+	if p.Omit || omit {
 		omitempty = ",omitempty"
 	}
 

@@ -34,13 +34,13 @@ Usage:
      typegen  [options]
 
 Options:
-     --aliases, -a                    Attempt to generate type names based on the JSON key data
      --file, -f       <filename>      Read from the named file instead of stdin
+     --help, -h                       Produce help output and exit
      --language, -l   <language>      Go or Swift; if not specified the default is Go
+     --no-aliases                     Do not attempt to generate type names based on the JSON key data
      --omit-empty                     For Go, add "omitempty" to the json tags
-     --output, -o     <filename>      Write to the named file isntead of stdout
+     --output, -o     <filename>      Write to the named file instead of stdout  --pretty                         For Swift code, align the declaration columns (off by default)
      --type, -t       <name>          Name of the base type to be created
-     --help, -h                       Produce help output
      --version, -v                    Display the typegen version number and exit
 ```
 

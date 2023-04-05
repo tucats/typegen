@@ -13,8 +13,6 @@ import (
 	"github.com/tucats/typegen/parser"
 )
 
-var Version string = "0.1.1"
-
 func main() {
 	var (
 		err      error
@@ -26,10 +24,12 @@ func main() {
 		omit     bool
 		debug    bool
 		aliases  bool
+		pretty   bool
 	)
 
 	input := os.Stdin
 	target := language.GoLang
+	aliases = true
 
 	for i := 1; i < len(os.Args); i++ {
 		arg := os.Args[i]
@@ -44,12 +44,15 @@ func main() {
 		case "-d", "--debug":
 			debug = true
 
-		case "-a", "--alias", "--aliases":
-			aliases = true
+		case "-a", "--no-alias", "--no-aliases":
+			aliases = false
 
 		case "-s", "--suffix":
 			i++
 			parser.AliasTypeSuffix = os.Args[i]
+
+		case "--pretty", "--pretty-print":
+			pretty = true
 
 		case "--language", "-l":
 			i++
@@ -58,9 +61,11 @@ func main() {
 			switch name {
 			case "go", "golang":
 				target = language.GoLang
+				pretty = true
 
 			case "swift":
 				target = language.Swift
+				pretty = false
 
 			default:
 				err = fmt.Errorf("unrecognized or unsupported language: %s", name)
@@ -123,6 +128,7 @@ func main() {
 
 		p.Debug = debug
 		p.UseAliases = aliases
+		p.Pretty = pretty
 
 		err = p.Parse(b)
 	}
