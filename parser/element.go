@@ -60,7 +60,7 @@ func desc(item interface{}) string {
 	case float64:
 		return fmt.Sprintf("float64 %v", actual)
 	case string:
-		return fmt.Sprintf("bool %v", strconv.Quote(actual))
+		return fmt.Sprintf("string %v", strconv.Quote(actual))
 	case []interface{}:
 		return fmt.Sprintf("array[%d]", len(actual))
 	case map[string]interface{}:

@@ -24,25 +24,7 @@ func generateGo(p *parser.Parser) string {
 	for _, name := range keys {
 		definition := p.Types[name]
 
-		if p.UseAliases {
-			if alias, found := p.Aliases[name]; found {
-				oldName := name
-				name = setCase(p, alias) + parser.AliasTypeSuffix
-
-				if p.Debug {
-					name = name + " /* " + oldName + " */"
-				}
-			} else {
-				continue
-			}
-		}
-
-		result.WriteString(fmt.Sprintf("type %s ", name))
-
-		if definition.Fields[0].Type.Array != nil {
-			result.WriteString("/* array member */ ")
-		}
-
+		result.WriteString(fmt.Sprintf("type %s ", name+parser.AliasTypeSuffix))
 		result.WriteString(goElement(p, definition, 1))
 		result.WriteRune('\n')
 	}
@@ -80,19 +62,17 @@ func goElement(p *parser.Parser, def *parser.Type, depth int) string {
 	case parser.FloatType:
 		return comment + indent("float64", depth-1)
 
-	case parser.TypeType:
-		name := def.Name
-		if def.AltName != "" {
-			name = def.AltName
-		}
-
-		return comment + indent(setCase(p, name), depth-1)
-
 	case parser.ArrayType:
 		return comment + goArray(p, def, depth)
 
+	case parser.TypeType:
+		return comment + def.Name
+
 	case parser.StructType:
 		return comment + goStruct(p, def, depth)
+
+	case parser.GenericArrayType:
+		return comment + "[]interface{}"
 
 	default:
 		return comment + fmt.Sprintf("###Unsupported type: %v", def.Kind)
@@ -101,7 +81,7 @@ func goElement(p *parser.Parser, def *parser.Type, depth int) string {
 
 // Generate an array declaration in Go syntax.
 func goArray(p *parser.Parser, def *parser.Type, depth int) string {
-	t := def.Fields[0].Type
+	t := def.BaseType
 	bt := strings.TrimSpace(goElement(p, t, depth))
 
 	return indent("[]"+bt, depth-1)
@@ -127,9 +107,19 @@ func goStruct(p *parser.Parser, def *parser.Type, depth int) string {
 			nameWidth = len(field.Name)
 		}
 
-		t := goElement(p, field.Type, depth+1)
-		if len(t) > typeWidth {
-			typeWidth = len(t)
+		text := ""
+
+		if t := p.Types[field.Name]; t != nil {
+			text = field.Name + parser.AliasTypeSuffix
+			if field.Type.Kind == parser.ArrayType {
+				text = "[]" + text
+			}
+		} else {
+			text = goElement(p, field.Type, depth+1)
+		}
+
+		if len(text) > typeWidth {
+			typeWidth = len(text)
 		}
 	}
 
@@ -141,9 +131,18 @@ func goStruct(p *parser.Parser, def *parser.Type, depth int) string {
 		result.WriteString(pad(setCase(p, field.Name), nameWidth))
 		result.WriteString(" ")
 
-		t := goElement(p, field.Type, depth+1)
+		text := ""
 
-		result.WriteString(pad(t, typeWidth))
+		if t := p.Types[field.Name]; t != nil {
+			text = field.Name + parser.AliasTypeSuffix
+			if field.Type.Kind == parser.ArrayType {
+				text = "[]" + text
+			}
+		} else {
+			text = goElement(p, field.Type, depth+1)
+		}
+
+		result.WriteString(pad(text, typeWidth))
 		result.WriteString(tag(p, field))
 		result.WriteRune('\n')
 	}

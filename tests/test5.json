@@ -4,9 +4,9 @@
         "members": [{
             "name": "Dick",
             "age": 55,
-            "gender": "m",
-            "active": true
+            "gender": "m"
         }, {
+            "active": true,
             "name": "Jane",
             "age": 52,
             "gender": "f"

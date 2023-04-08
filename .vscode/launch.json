@@ -10,7 +10,7 @@
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceFolder}",
-            "args":["-f", "tests/test4.json", "-d", "-a"]
+            "args":["-f", "tests/test5.json", "-d"]
         }
     ]
 }

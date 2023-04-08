@@ -24,21 +24,6 @@ func generateSwift(p *parser.Parser) string {
 	for _, name := range keys {
 		definition := p.Types[name]
 
-		if p.UseAliases {
-			if alias, found := p.Aliases[name]; found {
-				oldName := name
-				name = setCase(p, alias) + parser.AliasTypeSuffix
-
-				if p.Debug {
-					name = name + " /* " + oldName + " */"
-				}
-			} else {
-				continue
-			}
-		}
-
-		definition.Name = upcase(name)
-
 		result.WriteString(swiftElement(p, definition, 1))
 		result.WriteRune('\n')
 	}
@@ -71,21 +56,13 @@ func swiftElement(p *parser.Parser, def *parser.Type, depth int) string {
 	case parser.FloatType:
 		return indent("Double", depth-1)
 
-	case parser.InterfaceType:
+	case parser.InterfaceType, parser.GenericArrayType:
 		return "### NON-HOMOGENEOUS ARRAY MEMBERS ###"
-
-	case parser.TypeType:
-		name := def.Name
-		if def.AltName != "" {
-			name = def.AltName
-		}
-
-		return indent(upcase(setCase(p, name)), depth-1)
 
 	case parser.ArrayType:
 		return swiftArray(p, def, depth)
 
-	case parser.StructType:
+	case parser.StructType, parser.GenericStructType:
 		return swiftStruct(p, def, depth)
 
 	default:

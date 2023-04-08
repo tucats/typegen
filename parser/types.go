@@ -3,8 +3,6 @@ package parser
 import (
 	"fmt"
 	"strings"
-
-	"github.com/tucats/typegen/language"
 )
 
 type BaseType int
@@ -18,6 +16,8 @@ const (
 	ArrayType
 	StructType
 	TypeType
+	GenericArrayType
+	GenericStructType
 )
 
 type Field struct {
@@ -26,12 +26,13 @@ type Field struct {
 }
 
 type Type struct {
-	Kind    BaseType
-	Name    string
-	AltName string
-	Fields  []*Field
-	Array   *Type
-	Omit    bool
+	Kind     BaseType
+	Name     string
+	AltName  string
+	Fields   []*Field
+	BaseType *Type
+	Mergable bool
+	Omit     bool
 }
 
 var AliasTypeSuffix = "Type"
@@ -82,26 +83,38 @@ func (t *Type) String() string {
 		return "nil"
 	}
 
+	optional := ""
+
+	if t.Omit {
+		optional = ", optional"
+	}
+
 	switch t.Kind {
+	case GenericArrayType:
+		return "[]any" + optional
+
+	case GenericStructType:
+		return "struct" + optional
+
 	case BoolType:
-		return "bool"
+		return "bool" + optional
 
 	case IntType:
-		return "int"
+		return "int" + optional
 
 	case InterfaceType:
-		return "interface{}"
+		return "interface{}" + optional
 
 	case FloatType:
-		return "float64"
+		return "float64" + optional
 
 	case StringType:
-		return "string"
+		return "string" + optional
 
 	case ArrayType:
-		bt := t.Fields[0].Type
+		bt := t.BaseType
 
-		return "[]" + bt.String()
+		return "[]" + bt.String() + optional
 
 	case StructType:
 		text := strings.Builder{}
@@ -117,10 +130,10 @@ func (t *Type) String() string {
 
 		text.WriteString("}")
 
-		return text.String()
+		return text.String() + optional
 
 	case TypeType:
-		return fmt.Sprintf("type %s [%s]", t.Name, t.Fields[0].Type)
+		return t.Name
 
 	default:
 		return "unknown type"
@@ -130,7 +143,7 @@ func (t *Type) String() string {
 // Matches determines if the current type and the test type match exactly. This is
 // used to determine if the item is a type we have seen before or not. This will
 // recursively process compound structure types.
-func (t *Type) Matches(test *Type, target language.Language) bool {
+func (t *Type) Matches(test *Type) bool {
 	if test == nil {
 		return false
 	}
@@ -151,64 +164,81 @@ func (t *Type) Matches(test *Type, target language.Language) bool {
 			return false
 		}
 
-		return t1.Type.Matches(t2.Type, target)
+		return t1.Type.Matches(t2.Type)
 	}
 
 	if t.Kind == StructType {
-		if len(t.Fields) < len(test.Fields) {
-			return false
-		}
-
-		switch target {
-		case language.GoLang, language.Swift:
-			// Make a list of fields in the primary structure with their types.
+		if t.Mergable || test.Mergable {
+			// Make a list of fields in the base type with their types.
 			fields := map[string]*Type{}
 
 			for _, field := range t.Fields {
+				found := false
+
+				for _, newField := range test.Fields {
+					if newField.Name == field.Name {
+						found = true
+
+						break
+					}
+				}
+
+				if !found {
+					field.Type.Omit = true
+				}
+
 				fields[field.Name] = field.Type
 			}
 
-			// For every field in the test type, it must exist in the current
-			// primary type, and have a matching type. If the field in the test
-			// does not exist in the primary then it does not match.
+			// For every field in the test type, see if it is in the base type. If so, the
+			// types must match. Otherwise, mark is as optional and add it to the base field
+			// type list.
 			for _, field := range test.Fields {
 				if t2, found := fields[field.Name]; found {
-					if !t2.Matches(field.Type, target) {
+					if !t2.Matches(field.Type) {
 						return false
-					} else {
-						// Found successfully, remove from field list.
-						delete(fields, field.Name)
 					}
 				} else {
-					return false
+					field.Type.Omit = true
+					fields[field.Name] = field.Type
 				}
 			}
 
-			// Now, go over the fields that are left (that is, fields that are
-			// in the primary but not in the test) and mark them as being able
-			// to be omitted.
-			for _, fieldType := range fields {
-				fieldType.Omit = true
-			}
+			// Lastly, copy the field definitions back to the base type.
+			for name, fieldType := range fields {
+				found := false
 
-		// By default, to match the fields must be identical in other languages.
-		default:
+				// Try to find an existing definition by name. If found,
+				// update the base type with the (possibly updated) omit
+				// flag.
+				for index, existingField := range t.Fields {
+					if existingField.Name == name {
+						omit := fieldType.Omit || existingField.Type.Omit
+						t.Fields[index].Type.Omit = omit
+						found = true
+
+						break
+					}
+				}
+
+				// If this type wasn't found in the original type, add it with the
+				// optional flag set indicating it's not in all instances of the type.
+				if !found {
+					fieldType.Omit = true
+					t.Field(name, fieldType)
+				}
+			}
+		} else {
 			if len(t.Fields) != len(test.Fields) {
 				return false
 			}
 
 			for index, t1 := range t.Fields {
 				t2 := test.Fields[index]
-				if !t1.Type.Matches(t2.Type, target) {
+				if !t1.Type.Matches(t2.Type) {
 					return false
 				}
 			}
-		}
-	}
-
-	if t.Kind == TypeType {
-		if !t.Fields[0].Type.Matches(test.Fields[0].Type, target) {
-			return false
 		}
 	}
 

@@ -1,15 +1,11 @@
 package parser
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/tucats/typegen/language"
 )
 
 type Parser struct {
 	Types      map[string]*Type
-	Aliases    map[string]string
 	Camel      bool
 	Omit       bool
 	Debug      bool
@@ -22,30 +18,8 @@ type Parser struct {
 
 func New() *Parser {
 	return &Parser{
-		Types:   map[string]*Type{},
-		Aliases: map[string]string{},
+		Types: map[string]*Type{},
 	}
-}
-
-func (p *Parser) Alias(t *Type, newname string, depth int) *Parser {
-	if p.UseAliases {
-		oldname := t.Name
-		if oldname == "" && t.Kind == ArrayType {
-			oldname = t.Fields[0].Type.Name
-		}
-
-		if oldname == "" && t.AltName != "" {
-			oldname = t.AltName
-		}
-
-		p.Aliases[oldname] = newname
-
-		if p.Debug {
-			fmt.Printf("[%2d] %s-> Creating alias %s for %s\n", depth, strings.Repeat("| ", depth*2), oldname, newname)
-		}
-	}
-
-	return p
 }
 
 func (p *Parser) Language(target language.Language) *Parser {
