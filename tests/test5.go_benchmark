@@ -1,0 +1,15 @@
+type memberDataType struct {
+    Age    int           `json:"age"`
+    Gender string        `json:"gender"`
+    Name   string        `json:"name"`
+    Active bool          `json:"active,omitempty"`
+}
+
+type teamsType struct {
+    MemberData []memberDataType  `json:"memberData"`
+    Name       string            `json:"name"`
+}
+
+type jsonData struct {
+    Teams teamsType  `json:"teams"`
+}

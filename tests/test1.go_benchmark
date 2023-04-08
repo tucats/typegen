@@ -1,0 +1,4 @@
+type jsonData     []struct {
+      Age  int             `json:"age"`
+      Name string          `json:"name"`
+}

@@ -1,0 +1,15 @@
+class memberDataType: Codable  {
+  var age: Int     
+  var gender: String  
+  var name: String  
+  var active: Bool?   
+}
+
+class teamsType: Codable  {
+  var memberData: [memberDataType]()          
+  var name: String                      
+}
+
+class jsonData: Codable  {
+  var teams: teamsType                                                                                            
+}

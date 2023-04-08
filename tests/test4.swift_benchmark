@@ -1,0 +1,14 @@
+class members4Type: Codable  {
+  var age: Int     
+  var gender: String  
+  var name: String  
+}
+
+class team4Type: Codable  {
+  var members4: [members4Type]()            
+  var name: String                      
+}
+
+class jsonData: Codable  {
+  var team4: team4Type                                                                                          
+}

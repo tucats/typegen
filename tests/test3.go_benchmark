@@ -1,0 +1,33 @@
+type GlossDefType struct {
+    GlossSeeAlso []GlossSeeAlsoType  `json:"GlossSeeAlso"`
+    Para         string              `json:"para"`
+}
+
+type GlossDivType struct {
+    GlossList GlossListType  `json:"GlossList"`
+    Title     string         `json:"title"`
+}
+
+type GlossEntryType struct {
+    Abbrev    string        `json:"Abbrev"`
+    Acronym   string        `json:"Acronym"`
+    GlossDef  GlossDefType  `json:"GlossDef"`
+    GlossSee  string        `json:"GlossSee"`
+    GlossTerm string        `json:"GlossTerm"`
+    ID        string        `json:"ID"`
+    SortAs    string        `json:"SortAs"`
+}
+
+type GlossListType struct {
+    GlossEntry GlossEntryType  `json:"GlossEntry"`
+}
+
+type GlossSeeAlsoType   string
+type glossaryType struct {
+    GlossDiv GlossDivType  `json:"GlossDiv"`
+    Title    string        `json:"title"`
+}
+
+type jsonData struct {
+    Glossary glossaryType  `json:"glossary"`
+}

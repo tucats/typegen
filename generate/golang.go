@@ -13,6 +13,11 @@ import (
 func generateGo(p *parser.Parser) string {
 	result := strings.Builder{}
 
+	// If there was a package name, use that
+	if p.Package != "" {
+		result.WriteString(fmt.Sprintf("package %s\n\n", p.Package))
+	}
+
 	// Generate all the type definitions
 	keys := []string{}
 	for name := range p.Types {

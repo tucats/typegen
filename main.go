@@ -20,6 +20,7 @@ func main() {
 		outfile  string
 		text     string
 		typeName string
+		pkg      string
 		camel    bool
 		omit     bool
 		debug    bool
@@ -40,6 +41,10 @@ func main() {
 		case "--version", "-v":
 			fmt.Printf("typegen %s (%s)\n", Version, runtime.Version())
 			os.Exit(0)
+
+		case "-p", "--package":
+			i++
+			pkg = os.Args[i]
 
 		case "-d", "--debug":
 			debug = true
@@ -129,6 +134,7 @@ func main() {
 		p.Debug = debug
 		p.UseAliases = aliases
 		p.Pretty = pretty
+		p.Package = pkg
 
 		err = p.Parse(b)
 	}

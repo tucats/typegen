@@ -1,0 +1,4 @@
+class jsonData: Codable var jsonData: [{
+  var age: Int     
+  var name: String  
+}]()

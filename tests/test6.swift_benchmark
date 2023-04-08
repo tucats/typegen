@@ -1,0 +1,94 @@
+class _argsType: Codable var jsonData: [String]()
+class _phantomChildrenType: Codable  {
+}
+
+class _requestedType: Codable  {
+  var escapedName: String                
+  var fetchSpec: String                
+  var name: String                
+  var raw: String                
+  var rawSpec: String                
+  var registry: Bool                  
+  var saveSpec: ###Unsupported type: 0?
+  var type: String                
+}
+
+class _requiredByType: Codable String
+class authorType: Codable  {
+  var email: String  
+  var name: String  
+}
+
+class bugsType: Codable  {
+  var url: String  
+}
+
+class dependenciesType: Codable  {
+  var `bn.js`: String  
+  var brorand: String  
+  var `hash.js`: String  
+  var `hmac-drbg`: String  
+  var inherits: String  
+  var `minimalistic-assert`: String  
+  var `minimalistic-crypto-utils`: String  
+}
+
+class devDependenciesType: Codable  {
+  var brfs: String  
+  var coveralls: String  
+  var eslint: String  
+  var grunt: String  
+  var `grunt-browserify`: String  
+  var `grunt-cli`: String  
+  var `grunt-contrib-connect`: String  
+  var `grunt-contrib-copy`: String  
+  var `grunt-contrib-uglify`: String  
+  var `grunt-mocha-istanbul`: String  
+  var `grunt-saucelabs`: String  
+  var istanbul: String  
+  var mocha: String  
+}
+
+class filesType: Codable String
+class keywordsType: Codable String
+class repositoryType: Codable  {
+  var type: String  
+  var url: String  
+}
+
+class scriptsType: Codable  {
+  var lint: String  
+  var `lint:fix`: String  
+  var test: String  
+  var unit: String  
+  var version: String  
+}
+
+class jsonData: Codable  {
+  var `_args`: [_argsType]()                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+  var `_from`: String                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+  var `_id`: String                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+  var `_inBundle`: Bool                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+  var `_integrity`: String                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+  var `_location`: String                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+  var `_phantomChildren`: _phantomChildrenType                                                                                                                                                                                                                                                                                                                                                                                                                                            
+  var `_requested`: _requestedType                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+  var `_requiredBy`: [_requiredByType]()                                                                                                                                                                                                                                                                                                                                                                                                                                             
+  var `_resolved`: String                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+  var `_spec`: String                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+  var `_where`: String                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+  var author: authorType                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+  var bugs: bugsType                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+  var dependencies: dependenciesType                                                                                                                                                                                                                                                                                                                                                                                                                                                
+  var description: String                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+  var devDependencies: devDependenciesType                                                                                                                                                                                                                                                                                                                                                                                                                                             
+  var files: [filesType]()                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+  var homepage: String                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+  var keywords: [keywordsType]()                                                                                                                                                                                                                                                                                                                                                                                                                                                
+  var license: String                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+  var main: String                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+  var name: String                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+  var repository: repositoryType                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+  var scripts: scriptsType                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+  var version: String                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+}

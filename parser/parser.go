@@ -11,6 +11,7 @@ type Parser struct {
 	Debug      bool
 	UseAliases bool
 	Pretty     bool
+	Package    string
 	Name       string
 	Type       *Type
 	Target     language.Language

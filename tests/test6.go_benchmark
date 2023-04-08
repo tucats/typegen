@@ -1,0 +1,94 @@
+type _argsType     []string
+type _phantomChildrenType struct {
+}
+
+type _requestedType struct {
+    EscapedName string             `json:"escapedName"`
+    FetchSpec   string             `json:"fetchSpec"`
+    Name        string             `json:"name"`
+    Raw         string             `json:"raw"`
+    RawSpec     string             `json:"rawSpec"`
+    Registry    bool               `json:"registry"`
+    SaveSpec    interface{}        `json:"saveSpec,omitempty"`
+    Type        string             `json:"type"`
+}
+
+type _requiredByType   string
+type authorType struct {
+    Email string        `json:"email"`
+    Name  string        `json:"name"`
+}
+
+type bugsType struct {
+    Url string        `json:"url"`
+}
+
+type dependenciesType struct {
+    BnJs                      string        `json:"bn.js"`
+    Brorand                   string        `json:"brorand"`
+    HashJs                    string        `json:"hash.js"`
+    HmacDrbg                  string        `json:"hmac-drbg"`
+    Inherits                  string        `json:"inherits"`
+    MinimalisticAssert        string        `json:"minimalistic-assert"`
+    MinimalisticCryptoUtils   string        `json:"minimalistic-crypto-utils"`
+}
+
+type devDependenciesType struct {
+    Brfs                  string        `json:"brfs"`
+    Coveralls             string        `json:"coveralls"`
+    Eslint                string        `json:"eslint"`
+    Grunt                 string        `json:"grunt"`
+    GruntBrowserify       string        `json:"grunt-browserify"`
+    GruntCli              string        `json:"grunt-cli"`
+    GruntContribConnect   string        `json:"grunt-contrib-connect"`
+    GruntContribCopy      string        `json:"grunt-contrib-copy"`
+    GruntContribUglify    string        `json:"grunt-contrib-uglify"`
+    GruntMochaIstanbul    string        `json:"grunt-mocha-istanbul"`
+    GruntSaucelabs        string        `json:"grunt-saucelabs"`
+    Istanbul              string        `json:"istanbul"`
+    Mocha                 string        `json:"mocha"`
+}
+
+type filesType   string
+type keywordsType   string
+type repositoryType struct {
+    Type string        `json:"type"`
+    Url  string        `json:"url"`
+}
+
+type scriptsType struct {
+    Lint     string        `json:"lint"`
+    LintFix  string        `json:"lint:fix"`
+    Test     string        `json:"test"`
+    Unit     string        `json:"unit"`
+    Version  string        `json:"version"`
+}
+
+type jsonData struct {
+    Args             []_argsType           `json:"_args"`
+    From             string                `json:"_from"`
+    Id               string                `json:"_id"`
+    InBundle         bool                  `json:"_inBundle"`
+    Integrity        string                `json:"_integrity"`
+    Location         string                `json:"_location"`
+    PhantomChildren  _phantomChildrenType  `json:"_phantomChildren"`
+    Requested        _requestedType        `json:"_requested"`
+    RequiredBy       []_requiredByType     `json:"_requiredBy"`
+    Resolved         string                `json:"_resolved"`
+    Spec             string                `json:"_spec"`
+    Where            string                `json:"_where"`
+    Author           authorType            `json:"author"`
+    Bugs             bugsType              `json:"bugs"`
+    Dependencies     dependenciesType      `json:"dependencies"`
+    Description      string                `json:"description"`
+    DevDependencies  devDependenciesType   `json:"devDependencies"`
+    Files            []filesType           `json:"files"`
+    Homepage         string                `json:"homepage"`
+    Keywords         []keywordsType        `json:"keywords"`
+    License          string                `json:"license"`
+    Main             string                `json:"main"`
+    Name             string                `json:"name"`
+    Repository       repositoryType        `json:"repository"`
+    Scripts          scriptsType           `json:"scripts"`
+    Version          string                `json:"version"`
+}
