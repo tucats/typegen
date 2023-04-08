@@ -47,32 +47,32 @@ func goElement(p *parser.Parser, def *parser.Type, depth int) string {
 	comment := ""
 
 	switch def.Kind {
-	case parser.InterfaceType:
-		return comment + indent("interface{}", depth-1)
+	case parser.NullType, parser.InterfaceType:
+		return comment + indent("interface{}", depth)
 
 	case parser.BoolType:
-		return comment + indent("bool", depth-1)
+		return comment + indent("bool", depth)
 
 	case parser.StringType:
-		return comment + indent("string", depth-1)
+		return comment + indent("string", depth)
 
 	case parser.IntType:
-		return comment + indent("int", depth-1)
+		return comment + indent("int", depth)
 
 	case parser.FloatType:
-		return comment + indent("float64", depth-1)
+		return comment + indent("float64", depth)
 
 	case parser.ArrayType:
 		return comment + goArray(p, def, depth)
 
 	case parser.TypeType:
-		return comment + def.Name
+		return comment + indent(def.Name, depth+1)
 
 	case parser.StructType:
-		return comment + goStruct(p, def, depth)
+		return comment + goStruct(p, def, depth+1)
 
 	case parser.GenericArrayType:
-		return comment + "[]interface{}"
+		return comment + indent("[]interface{}", depth)
 
 	default:
 		return comment + fmt.Sprintf("###Unsupported type: %v", def.Kind)
@@ -82,9 +82,9 @@ func goElement(p *parser.Parser, def *parser.Type, depth int) string {
 // Generate an array declaration in Go syntax.
 func goArray(p *parser.Parser, def *parser.Type, depth int) string {
 	t := def.BaseType
-	bt := strings.TrimSpace(goElement(p, t, depth))
+	bt := strings.TrimSpace(goElement(p, t, depth+1))
 
-	return indent("[]"+bt, depth-1)
+	return indent("[]"+bt, depth+1)
 }
 
 // Generate a structure declaration in Go syntax.
@@ -142,7 +142,7 @@ func goStruct(p *parser.Parser, def *parser.Type, depth int) string {
 			text = goElement(p, field.Type, depth+1)
 		}
 
-		result.WriteString(pad(text, typeWidth))
+		result.WriteString(pad(strings.TrimSpace(text), typeWidth))
 		result.WriteString(tag(p, field))
 		result.WriteRune('\n')
 	}

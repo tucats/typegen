@@ -75,6 +75,10 @@ func setCase(p *parser.Parser, name string) string {
 }
 
 func indent(s string, d int) string {
+	if d <= 0 {
+		return s
+	}
+
 	return strings.Repeat("  ", d) + s
 }
 

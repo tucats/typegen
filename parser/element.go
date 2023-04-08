@@ -19,6 +19,12 @@ func (p *Parser) element(item interface{}, depth int) (*Type, error) {
 	}
 
 	switch actual := item.(type) {
+	case nil:
+		t := newType(NullType)
+		t.Omit = true
+
+		return t, nil
+
 	case string:
 		return newType(StringType), nil
 
@@ -51,6 +57,8 @@ func (p *Parser) element(item interface{}, depth int) (*Type, error) {
 // Debugging function that prints a human-readable summary of an interface object.
 func desc(item interface{}) string {
 	switch actual := item.(type) {
+	case nil:
+		return "nil"
 	case bool:
 		return fmt.Sprintf("bool %v", actual)
 	case int:

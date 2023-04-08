@@ -37,9 +37,9 @@ Options:
      --file, -f       <filename>      Read from the named file instead of stdin
      --help, -h                       Produce help output and exit
      --language, -l   <language>      Go or Swift; if not specified the default is Go
-     --no-aliases                     Do not attempt to generate type names based on the JSON key data
      --omit-empty                     For Go, add "omitempty" to the json tags
-     --output, -o     <filename>      Write to the named file instead of stdout  --pretty                         For Swift code, align the declaration columns (off by default)
+     --output, -o     <filename>      Write to the named file instead of stdout 
+     --pretty                         For Swift code, align the declaration columns (off by default)
      --type, -t       <name>          Name of the base type to be created
      --version, -v                    Display the typegen version number and exit
 ```
@@ -68,14 +68,12 @@ Consider the following JSON data file, which we will assume is named "data.json"
 To generate the associated Go code, you can use a command line like this:
 
 ```sh
-testgen --file data.json --language go --aliases
+testgen --file data.json --language go 
 ```
 
 The program will run, and generate it's output to stdout. (You can redirect it to a file
 using the `--output` command line option). The use of `--language` is optional in this case
-since Go is the default language. The `--aliases` option tells typegen to attempt to name
-derived types based on the field name data. For example, in the above JSON, the array of
-homogeneous members would be defined as an array of "MembersType" structures.
+since Go is the default language.
 
 ```go
 type MembersType struct {
@@ -126,13 +124,12 @@ Consider the following JSON data file, which we will assume is named "data.json"
 To generate the associated Swift code, you can use a command line like this:
 
 ```sh
-testgen --file data.json --language swift --aliases
+testgen --file data.json --language swift 
 ```
 
 The program will run, and generate it's output to stdout. (You can redirect it to a file
 using the `--output` command line option). The use of `--language` indicates that the output
-is generated using Swift syntax. The `--aliases` option tells typegen to attempt to name
-derived types based on the field name data.
+is generated using Swift syntax.
 
 ```swift
 class GlossDefType: Codable {

@@ -14,7 +14,6 @@ Options:
   --file, -f      <filename>     Read sample json from named file instead of stdin
   --help, -h                     Produce help output and exit
   --language, -l  <language>     "go" or "swift", default is "go"
-  --no-aliases                   Do not attempt to generate type names based on object keys
   --omit-empty                   Add omitempty to json tags in Go structures
   --output, -o    <filename>     Write generated text to named file instead of stdout
   --pretty                       For Swift code, align the declaration columns (off by default)

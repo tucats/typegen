@@ -8,7 +8,8 @@ import (
 type BaseType int
 
 const (
-	InterfaceType BaseType = iota
+	NullType BaseType = iota
+	InterfaceType
 	BoolType
 	IntType
 	FloatType
@@ -90,6 +91,9 @@ func (t *Type) String() string {
 	}
 
 	switch t.Kind {
+	case NullType:
+		return "nil" + optional
+
 	case GenericArrayType:
 		return "[]any" + optional
 

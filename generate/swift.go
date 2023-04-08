@@ -24,16 +24,17 @@ func generateSwift(p *parser.Parser) string {
 	for _, name := range keys {
 		definition := p.Types[name]
 
+		result.WriteString(fmt.Sprintf("class %s: Codable ", name+parser.AliasTypeSuffix))
 		result.WriteString(swiftElement(p, definition, 1))
 		result.WriteRune('\n')
 	}
 
 	name := p.Name
 	if name == "" {
-		name = "JsonData"
+		name = "jsonData"
 	}
 
-	p.Type.Name = name
+	result.WriteString(fmt.Sprintf("class %s: Codable ", name))
 	result.WriteString(swiftElement(p, p.Type, 1))
 
 	return result.String()
@@ -72,7 +73,7 @@ func swiftElement(p *parser.Parser, def *parser.Type, depth int) string {
 
 // Show an array definition.
 func swiftArray(p *parser.Parser, def *parser.Type, depth int) string {
-	t := def.Fields[0].Type
+	t := def.BaseType
 
 	if t.Kind == parser.InterfaceType {
 		return "  Bool? /* Invalid heterogeneous array in input data */"
@@ -113,7 +114,7 @@ func swiftStruct(p *parser.Parser, def *parser.Type, depth int) string {
 		}
 	}
 
-	result.WriteString(fmt.Sprintf("class %s: Codable {\n", setCase(p, def.Name)))
+	result.WriteString(" {\n")
 
 	for _, field := range def.Fields {
 		result.WriteString(pad("", depth*2))
@@ -125,17 +126,25 @@ func swiftStruct(p *parser.Parser, def *parser.Type, depth int) string {
 			result.WriteString(setCase(p, field.Name) + ": ")
 		}
 
-		t := swiftElement(p, field.Type, depth+1)
+		text := ""
+		if t := p.Types[field.Name]; t != nil {
+			text = field.Name + parser.AliasTypeSuffix
+			if field.Type.Kind == parser.ArrayType {
+				text = "[" + text + "]()"
+			}
+		} else {
+			text = swiftElement(p, field.Type, depth+1)
+		}
 
 		if field.Type.Omit {
-			t = t + "?" // Mark as optional
+			text = text + "?" // Mark as optional
 		}
 
 		if !p.Pretty {
-			t = strings.TrimSpace(t)
+			text = strings.TrimSpace(text)
 		}
 
-		result.WriteString(pad(t, typeWidth))
+		result.WriteString(pad(text, typeWidth))
 		result.WriteRune('\n')
 	}
 
