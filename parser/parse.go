@@ -11,6 +11,8 @@ func (p *Parser) Parse(data []byte) error {
 		element interface{}
 	)
 
+	data = strip(data, p.Debug)
+
 	err = json.Unmarshal(data, &element)
 	if err != nil {
 		return err
