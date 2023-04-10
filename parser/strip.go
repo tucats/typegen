@@ -38,6 +38,10 @@ func strip(data []byte, debug bool) []byte {
 				continue
 			}
 
+			if quote {
+				continue
+			}
+
 			if ch == '/' {
 				if comment {
 					modified = true
