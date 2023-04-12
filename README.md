@@ -39,7 +39,9 @@ Options:
      --language, -l   <language>      Go or Swift; if not specified the default is Go
      --omit-empty                     For Go, add "omitempty" to the json tags
      --output, -o     <filename>      Write to the named file instead of stdout 
+     --package, -p    <name>          For Go code, generate a package statement with the given name
      --pretty                         For Swift code, align the declaration columns (off by default)
+     --quiet, -q                      Suppress status messages to stdout
      --type, -t       <name>          Name of the base type to be created
      --version, -v                    Display the typegen version number and exit
 ```
