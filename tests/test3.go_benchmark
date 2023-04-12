@@ -22,11 +22,11 @@ type GlossListType struct {
     GlossEntry GlossEntryType  `json:"GlossEntry"`
 }
 
-type glossaryType struct {
+type GlossaryType struct {
     GlossDiv GlossDivType  `json:"GlossDiv"`
     Title    string        `json:"title"`
 }
 
-type jsonData struct {
-    Glossary glossaryType  `json:"glossary"`
+type JsonData struct {
+    Glossary GlossaryType          `json:"glossary"`
 }

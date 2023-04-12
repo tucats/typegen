@@ -1,1 +1,1 @@
-type jsonData     []int
+type JsonData     []int

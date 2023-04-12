@@ -5,10 +5,10 @@ class membersType: Codable  {
 }
 
 class teamType: Codable  {
-  var members: [membersType]()             
-  var name: String                      
+  var members: [membersType]()  
+  var name: String           
 }
 
 class jsonData: Codable  {
-  var team: teamType                                                                                          
+  var team: teamType
 }

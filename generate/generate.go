@@ -40,7 +40,7 @@ func dumpTree(p *parser.Parser) {
 	sort.Strings(keys)
 
 	for _, key := range keys {
-		fmt.Printf("    type: %s\n", key+parser.AliasTypeSuffix)
+		fmt.Printf("    type: %s\n", key)
 		dumpElement(p.Types[key], 2)
 	}
 

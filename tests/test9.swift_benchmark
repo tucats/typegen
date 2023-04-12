@@ -1,3 +1,3 @@
 class jsonData: Codable {
-   var item: [Int]()
+   var item: String
 }

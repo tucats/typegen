@@ -8,6 +8,6 @@ class configurationsType: Codable  {
 }
 
 class jsonData: Codable  {
-  var configurations: [configurationsType]()      
-  var version: String                      
+  var configurations: [configurationsType]()  
+  var version: String                  
 }

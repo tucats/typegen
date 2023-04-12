@@ -1,4 +1,8 @@
-class jsonData: Codable var jsonData: [{
+class jsonDataType1: Codable  {
   var age: Int     
   var name: String  
-}]()
+}
+
+class jsonData: Codable {
+   var item: [jsonDataType1]()
+}

@@ -24,7 +24,7 @@ func generateSwift(p *parser.Parser) string {
 	for _, name := range keys {
 		definition := p.Types[name]
 
-		result.WriteString(fmt.Sprintf("class %s: Codable ", name+parser.AliasTypeSuffix))
+		result.WriteString(fmt.Sprintf("class %s: Codable ", name))
 		result.WriteString(swiftElement(p, definition, 1))
 		result.WriteRune('\n')
 	}
@@ -35,7 +35,16 @@ func generateSwift(p *parser.Parser) string {
 	}
 
 	result.WriteString(fmt.Sprintf("class %s: Codable ", name))
+
+	if p.Type.Kind != parser.StructType {
+		result.WriteString("{\n   var item: ")
+	}
+
 	result.WriteString(swiftElement(p, p.Type, 1))
+
+	if p.Type.Kind != parser.StructType {
+		result.WriteString("\n}\n")
+	}
 
 	return result.String()
 }
@@ -66,6 +75,9 @@ func swiftElement(p *parser.Parser, def *parser.Type, depth int) string {
 	case parser.StructType, parser.GenericStructType:
 		return swiftStruct(p, def, depth)
 
+	case parser.TypeType:
+		return def.Name
+
 	default:
 		return fmt.Sprintf("###Unsupported type: %v", def.Kind)
 	}
@@ -81,7 +93,7 @@ func swiftArray(p *parser.Parser, def *parser.Type, depth int) string {
 
 	bt := strings.TrimSpace(swiftElement(p, t, depth))
 
-	if depth == 1 {
+	if depth == -1 {
 		return "var jsonData: [" + bt + "]()"
 	}
 
@@ -97,6 +109,10 @@ func swiftStruct(p *parser.Parser, def *parser.Type, depth int) string {
 
 	if def == nil {
 		return "## NIL DEF ##"
+	}
+
+	if len(def.Fields) == 0 {
+		return "{} /* Object with no fields */\n"
 	}
 
 	for n, field := range def.Fields {
@@ -127,8 +143,10 @@ func swiftStruct(p *parser.Parser, def *parser.Type, depth int) string {
 		}
 
 		text := ""
-		if t := p.Types[field.Name]; t != nil {
-			text = field.Name + parser.AliasTypeSuffix
+		typeName := field.Name + parser.AliasTypeSuffix
+
+		if t := p.Types[typeName]; t != nil {
+			text = typeName
 			if field.Type.Kind == parser.ArrayType {
 				text = "[" + text + "]()"
 			}

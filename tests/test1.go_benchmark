@@ -1,4 +1,6 @@
-type jsonData     []struct {
-      Age  int             `json:"age"`
-      Name string          `json:"name"`
+type jsonDataType1 struct {
+    Age  int           `json:"age"`
+    Name string        `json:"name"`
 }
+
+type JsonData     []jsonDataType1

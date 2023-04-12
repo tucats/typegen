@@ -1,14 +1,14 @@
-type membersType struct {
+type MembersType struct {
     Age    int           `json:"age"`
     Gender string        `json:"gender"`
     Name   string        `json:"name"`
 }
 
-type teamType struct {
-    Members []membersType  `json:"members"`
-    Name    string         `json:"name"`
+type TeamType struct {
+    Members []MembersType          `json:"members"`
+    Name    string                 `json:"name"`
 }
 
-type jsonData struct {
-    Team teamType  `json:"team"`
+type JsonData struct {
+    Team TeamType          `json:"team"`
 }

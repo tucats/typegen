@@ -4,6 +4,6 @@ class itemsType: Codable  {
 }
 
 class jsonData: Codable  {
-  var items: [itemsType]()               
-  var version: String                      
+  var items: [itemsType]()  
+  var version: String         
 }

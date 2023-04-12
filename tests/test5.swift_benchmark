@@ -6,10 +6,10 @@ class memberDataType: Codable  {
 }
 
 class teamsType: Codable  {
-  var memberData: [memberDataType]()          
-  var name: String                      
+  var memberData: [memberDataType]()  
+  var name: String              
 }
 
 class jsonData: Codable  {
-  var teams: teamsType                                                                                            
+  var teams: teamsType
 }

@@ -1,29 +1,33 @@
 #!/bin/sh
 
-for i in 1 2 3 4 5 6 7 8
+for i in $(ls -1 tests/test*.json)
+
 do 
    echo "Testing $i"
 
-   ./typegen -f tests/test$i.json -o tests/test$i.go_test
-   diff tests/test$i.go_test tests/test$i.go_benchmark 
+   RUN=$(dirname $i)/$(basename $i .json).go_test
+   BENCH=$(dirname $i)/$(basename $i .json).go_benchmark
+
+   ./typegen -f $i -o $RUN
+   diff $RUN $BENCH
 
    if [ $? != 0 ]; then
       echo "Error on test for Go: $i"
-      exit 1
    else
-      rm tests/test$i.go_test
+      rm $RUN
    fi
 
-   ./typegen -f tests/test$i.json -o tests/test$i.swift_test -l swift
-   diff tests/test$i.swift_test tests/test$i.swift_benchmark 
+   RUN=$(dirname $i)/$(basename $i .json).swift_test
+   BENCH=$(dirname $i)/$(basename $i .json).swift_benchmark
+
+   ./typegen -f $i -o $RUN -l swift
+   diff $RUN $BENCH
 
    if [ $? != 0 ]; then
       echo "Error on test for Swift: $i"
-      exit 1
    else
-      rm tests/test$i.swift_test
+      rm $RUN
    fi
-
 
 done
 

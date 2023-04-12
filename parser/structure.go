@@ -28,25 +28,40 @@ func (p *Parser) structure(data map[string]interface{}, depth int) (*Type, error
 		ft, _ := p.element(data[key], depth+1)
 
 		if ft.Kind == StructType {
-			if _, found := p.Types[key]; !found {
-				p.Types[key] = ft
+			typeName := p.MakeTypeName(key)
+
+			if t, found := p.Types[typeName]; !found {
+				p.Types[typeName] = ft
 				if p.Debug {
-					fmt.Printf("[%2d] %screate struct type %s as %s\n", depth, strings.Repeat("| ", depth), key+AliasTypeSuffix, ft)
+					fmt.Printf("[%2d] %screate struct type %s as %s\n", depth, strings.Repeat("| ", depth), typeName, ft)
 				}
+
+				ft = newType(TypeType).Named(typeName)
+			} else {
+				if p.Debug {
+					fmt.Printf("[%2d] %susing struct type %s as %s\n", depth, strings.Repeat("| ", depth), typeName, t)
+				}
+				ft = t
 			}
 		}
 
 		if ft.Kind == ArrayType {
-			if _, found := p.Types[key]; !found {
+			typeName := p.MakeTypeName(key)
+			if t, found := p.Types[typeName]; !found {
 				if p.Debug {
-					fmt.Printf("[%2d] %screate array type %s as %s\n", depth, strings.Repeat("| ", depth), key+AliasTypeSuffix, ft.BaseType)
+					fmt.Printf("[%2d] %screate array type %s as %s\n", depth, strings.Repeat("| ", depth), typeName, ft.BaseType)
 				}
 
 				// If the base type is a struct, save it as a type
 				if ft.BaseType.Kind == StructType {
-					p.Types[key] = ft.BaseType
-					ft.BaseType = newType(TypeType).Named(key + AliasTypeSuffix)
+					p.Types[typeName] = ft.BaseType
+					ft.BaseType = newType(TypeType).Named(typeName)
 				}
+			} else {
+				if p.Debug {
+					fmt.Printf("[%2d] %susing struct type %s as %s\n", depth, strings.Repeat("| ", depth), typeName, t)
+				}
+				ft.BaseType = t
 			}
 		}
 

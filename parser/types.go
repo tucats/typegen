@@ -3,6 +3,9 @@ package parser
 import (
 	"fmt"
 	"strings"
+	"unicode"
+
+	"github.com/tucats/typegen/language"
 )
 
 type BaseType int
@@ -243,4 +246,39 @@ func (t *Type) Matches(test *Type) bool {
 	}
 
 	return true
+}
+
+func (p *Parser) MakeTypeName(name string) string {
+	result := strings.Builder{}
+	escape := false
+
+	for index, ch := range name {
+		if index == 0 && p.Target == language.GoLang {
+			ch = unicode.ToUpper(ch)
+			if !unicode.IsLetter(ch) {
+				ch = 'X'
+			}
+		}
+
+		if !unicode.IsLetter(ch) && !unicode.IsDigit(ch) {
+			switch p.Target {
+			case language.GoLang:
+				ch = '_'
+
+			case language.Swift:
+				escape = true
+			}
+		}
+
+		result.WriteRune(ch)
+	}
+
+	result.WriteString(AliasTypeSuffix)
+
+	text := result.String()
+	if escape {
+		text = "`" + text + "`"
+	}
+
+	return text
 }

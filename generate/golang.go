@@ -29,14 +29,14 @@ func generateGo(p *parser.Parser) string {
 	for _, name := range keys {
 		definition := p.Types[name]
 
-		result.WriteString(fmt.Sprintf("type %s ", name+parser.AliasTypeSuffix))
+		result.WriteString(fmt.Sprintf("type %s ", name))
 		result.WriteString(goElement(p, definition, 1))
 		result.WriteRune('\n')
 	}
 
 	name := p.Name
 	if name == "" {
-		name = "jsonData"
+		name = "JsonData"
 	}
 
 	result.WriteString(fmt.Sprintf("type %s ", name))
@@ -113,9 +113,10 @@ func goStruct(p *parser.Parser, def *parser.Type, depth int) string {
 		}
 
 		text := ""
+		typeName := field.Name + parser.AliasTypeSuffix
 
-		if t := p.Types[field.Name]; t != nil {
-			text = field.Name + parser.AliasTypeSuffix
+		if t := p.Types[typeName]; t != nil {
+			text = typeName
 			if field.Type.Kind == parser.ArrayType {
 				text = "[]" + text
 			}
@@ -137,9 +138,10 @@ func goStruct(p *parser.Parser, def *parser.Type, depth int) string {
 		result.WriteString(" ")
 
 		text := ""
+		typeName := field.Name + parser.AliasTypeSuffix
 
-		if t := p.Types[field.Name]; t != nil {
-			text = field.Name + parser.AliasTypeSuffix
+		if t := p.Types[typeName]; t != nil {
+			text = typeName
 			if field.Type.Kind == parser.ArrayType {
 				text = "[]" + text
 			}

@@ -8,10 +8,10 @@ import (
 var sequenceNumber int32
 
 // Generate a sequence number that is guaranteed to be unique and thread-safe.
-func (p *Parser) generateTypeName() string {
+func (p *Parser) GenerateTypeName() string {
 	name := p.Name
 	if name == "" {
-		name = "generated"
+		name = "jsonData"
 	}
 
 	n := atomic.AddInt32(&sequenceNumber, 1)

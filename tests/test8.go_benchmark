@@ -1,4 +1,4 @@
-type configurationsType struct {
+type ConfigurationsType struct {
     Args    []string          `json:"args"`
     Mode    string            `json:"mode"`
     Name    string            `json:"name"`
@@ -7,7 +7,7 @@ type configurationsType struct {
     Type    string            `json:"type"`
 }
 
-type jsonData struct {
-    Configurations []configurationsType  `json:"configurations"`
-    Version        string                `json:"version"`
+type JsonData struct {
+    Configurations []ConfigurationsType          `json:"configurations"`
+    Version        string                        `json:"version"`
 }
