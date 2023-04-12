@@ -1,0 +1,9 @@
+class itemsType: Codable  {
+  var list: [String]()  
+  var name: String      
+}
+
+class jsonData: Codable  {
+  var items: [itemsType]()               
+  var version: String                      
+}

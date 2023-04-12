@@ -1,7 +1,7 @@
 {
-    "team4": {
+    "team": {
         "name": "All Stars",
-        "members4": [{
+        "members": [{
             "name": "Dick",
             "age": 55,
             "gender": "m"

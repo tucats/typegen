@@ -42,8 +42,11 @@ func (p *Parser) structure(data map[string]interface{}, depth int) (*Type, error
 					fmt.Printf("[%2d] %screate array type %s as %s\n", depth, strings.Repeat("| ", depth), key+AliasTypeSuffix, ft.BaseType)
 				}
 
-				p.Types[key] = ft.BaseType
-				ft.BaseType = newType(TypeType).Named(key + AliasTypeSuffix)
+				// If the base type is a struct, save it as a type
+				if ft.BaseType.Kind == StructType {
+					p.Types[key] = ft.BaseType
+					ft.BaseType = newType(TypeType).Named(key + AliasTypeSuffix)
+				}
 			}
 		}
 

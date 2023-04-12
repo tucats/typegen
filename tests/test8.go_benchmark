@@ -1,0 +1,13 @@
+type configurationsType struct {
+    Args    []string          `json:"args"`
+    Mode    string            `json:"mode"`
+    Name    string            `json:"name"`
+    Program string            `json:"program"`
+    Request string            `json:"request"`
+    Type    string            `json:"type"`
+}
+
+type jsonData struct {
+    Configurations []configurationsType  `json:"configurations"`
+    Version        string                `json:"version"`
+}

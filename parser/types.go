@@ -157,18 +157,14 @@ func (t *Type) Matches(test *Type) bool {
 	}
 
 	if t.Kind == ArrayType {
-		if len(t.Fields) != 1 || len(test.Fields) != 1 {
-			return false
-		}
-
-		t1 := t.Fields[0]
-		t2 := test.Fields[0]
+		t1 := t.BaseType
+		t2 := test.BaseType
 
 		if t1 == nil || t2 == nil {
 			return false
 		}
 
-		return t1.Type.Matches(t2.Type)
+		return t1.Matches(t2)
 	}
 
 	if t.Kind == StructType {

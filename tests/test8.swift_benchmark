@@ -1,0 +1,13 @@
+class configurationsType: Codable  {
+  var args: [String]()  
+  var mode: String      
+  var name: String      
+  var program: String      
+  var request: String      
+  var type: String      
+}
+
+class jsonData: Codable  {
+  var configurations: [configurationsType]()      
+  var version: String                      
+}

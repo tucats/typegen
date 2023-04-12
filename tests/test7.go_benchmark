@@ -1,0 +1,9 @@
+type itemsType struct {
+    List []string          `json:"list"`
+    Name string            `json:"name"`
+}
+
+type jsonData struct {
+    Items   []itemsType   `json:"items"`
+    Version string        `json:"version"`
+}

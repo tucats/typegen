@@ -1,6 +1,6 @@
 type GlossDefType struct {
-    GlossSeeAlso []GlossSeeAlsoType  `json:"GlossSeeAlso"`
-    Para         string              `json:"para"`
+    GlossSeeAlso []string          `json:"GlossSeeAlso"`
+    Para         string            `json:"para"`
 }
 
 type GlossDivType struct {
@@ -22,7 +22,6 @@ type GlossListType struct {
     GlossEntry GlossEntryType  `json:"GlossEntry"`
 }
 
-type GlossSeeAlsoType   string
 type glossaryType struct {
     GlossDiv GlossDivType  `json:"GlossDiv"`
     Title    string        `json:"title"`
