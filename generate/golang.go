@@ -92,7 +92,10 @@ func goArray(p *parser.Parser, def *parser.Type, depth int) string {
 	return indent("[]"+bt, depth+1)
 }
 
-// Generate a structure declaration in Go syntax.
+// Generate a structure declaration in Go syntax. The field types
+// are checked against the dictionary of types to see if this should
+// be rendered as a reference to the named type. If it is not a
+// type in the map, then format it as-is for output.
 func goStruct(p *parser.Parser, def *parser.Type, depth int) string {
 	result := strings.Builder{}
 

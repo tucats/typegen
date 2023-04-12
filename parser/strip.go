@@ -5,6 +5,10 @@ import (
 	"strings"
 )
 
+// Strip out any comments in the JSON code. Comments are not standard, but are
+// placed in JSON by some apps (for example, VS Code). However, comments are not
+// supported in the Go decoder package. This function locates the comments and
+// removes them from the JSON string before starting the parse.
 func strip(data []byte, debug bool) []byte {
 	// Convert back to a string
 	str := string(data)

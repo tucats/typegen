@@ -8,21 +8,6 @@ import (
 	"github.com/tucats/typegen/parser"
 )
 
-// Return the string with the first character uppercased.
-func upcase(s string) string {
-	r := strings.Builder{}
-
-	for index, ch := range s {
-		if index == 0 {
-			ch = unicode.ToUpper(ch)
-		}
-
-		r.WriteRune(ch)
-	}
-
-	return r.String()
-}
-
 // Handle name modifications appropriate to the target language and
 // settings. This includes setting camel-case if requested for Go code,
 // and also handling invalid names in the various languages, which are
@@ -74,6 +59,11 @@ func setCase(p *parser.Parser, name string) string {
 	return backTick + result.String() + backTick
 }
 
+// Indent the given string by the number of "tab stops" in the d parameter. If this
+// value is less than 1, no indentention is done and the string is returned unchanged.
+// If the value is greater-than or equal-to 1, then the string is returned, prefaced
+// by two spaces for each indentation number. That is, a d value of 3 indents by 6
+// spaces, etc.
 func indent(s string, d int) string {
 	if d <= 0 {
 		return s
@@ -82,6 +72,10 @@ func indent(s string, d int) string {
 	return strings.Repeat("  ", d) + s
 }
 
+// Pad the string to the given width. If the string is already longer than the
+// width, the string is returned as-is.  Otherwise, the string has as many blanks
+// added to the right side of tne string needed to make the string be the given
+// width in characters.
 func pad(s string, w int) string {
 	for len(s) < w {
 		s = s + " "

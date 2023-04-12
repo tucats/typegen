@@ -27,9 +27,13 @@ func Generate(p *parser.Parser, target language.Language) string {
 	}
 }
 
+// Dump the tree of parsed data structures. This is a debugging feature (only
+// called if the debug flag is set in the parser) and does not produce output
+// for any given language. Instead, it is used to verify that the parsed data
+// structure is correct when debugging generation.
 func dumpTree(p *parser.Parser) {
-	fmt.Printf("\n------------\n")
-	fmt.Printf("Types:\n")
+	fmt.Printf("\nPARSED DATA STRUCTURE\n")
+	fmt.Printf("Indirect types:\n")
 
 	keys := []string{}
 
@@ -47,9 +51,15 @@ func dumpTree(p *parser.Parser) {
 	fmt.Printf("Base type:\n")
 	dumpElement(p.Type, 0)
 
-	fmt.Printf("------------\n\n")
+	fmt.Printf("\n\n")
 }
 
+// For a given type element, format it for output with a trailing
+// newline character. For structures, this involves recursively
+// formatting the field types of the structure.
+//
+// Note that this output is used for debugging purposes so it is
+// not formatted for anything other than human-readability.
 func dumpElement(t *parser.Type, depth int) {
 	switch t.Kind {
 	case parser.BoolType:
